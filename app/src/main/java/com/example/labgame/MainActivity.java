@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void    addTextWatchers() {
+    private void addTextWatchers() {
         go1.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -250,8 +250,6 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("Finish");
 
-                    
-
                     if (seekBar1.getProgress() >= 100 || seekBar2.getProgress() >= 100 || seekBar3.getProgress() >= 100) {
                         timer.cancel();
 
@@ -263,52 +261,27 @@ public class MainActivity extends AppCompatActivity {
                             engineSound.release();
                             engineSound = null;
                         }
-                        // Tính toán số dư hiện tại
-                        int currentBalance = Integer.parseInt(balance.getText().toString().replace("$", ""));
 
-                         // Xác định xe chiến thắng
-                         String winningCar = "";
-                         if (seekBar1.getProgress() >= 100) {
-                             winningCar = "Car 1";
-                         } else if (seekBar2.getProgress() >= 100) {
-                             winningCar = "Car 2";
-                         } else if (seekBar3.getProgress() >= 100) {
-                             winningCar = "Car 3";
-                         }
+                        // Xác định xe chiến thắng
+                        String winningCar = "";
+                        if (seekBar1.getProgress() >= 100) {
+                            winningCar = "Car 1";
+                        } else if (seekBar2.getProgress() >= 100) {
+                            winningCar = "Car 2";
+                        } else if (seekBar3.getProgress() >= 100) {
+                            winningCar = "Car 3";
+                        }
 
                         // Xác định thắng/thua dựa vào số dư
                         int prize = 0;
-                        if (currentBalance > initialBalance) {
-                            // Người chơi thắng
-                            if (winningCar.equals("Car 1") && cb1.isChecked()) {
-                                prize = (int) (Integer.parseInt(go1.getText().toString()) * 0.85);
-                            } else if (winningCar.equals("Car 2") && cb2.isChecked()) {
-                                prize = (int) (Integer.parseInt(go2.getText().toString()) * 0.85);
-                            } else if (winningCar.equals("Car 3") && cb3.isChecked()) {
-                                prize = (int) (Integer.parseInt(go3.getText().toString()) * 0.85);
-                            }
-                        } else {
-                           // Người chơi thua - Tính tổng số tiền thua
-
-                            if (winningCar.equals("Car 1") && cb1.isChecked()) {
-                                prize = (int) (Integer.parseInt(go1.getText().toString()) * 0.85);
-                            } else if (winningCar.equals("Car 2") && cb2.isChecked()) {
-                                prize = (int) (Integer.parseInt(go2.getText().toString()) * 0.85);
-                            } else if (winningCar.equals("Car 3") && cb3.isChecked()) {
-                                prize = (int) (Integer.parseInt(go3.getText().toString()) * 0.85);
-                            }
-
-                           if (cb1.isChecked()) {
-                            prize -= Integer.parseInt(go1.getText().toString());
-                            }
-                            if (cb2.isChecked()) {
-                            prize -= Integer.parseInt(go2.getText().toString());
-                            }
-                            if (cb3.isChecked()) {
-                            prize -= Integer.parseInt(go3.getText().toString());
-                         }
+                        if (winningCar.equals("Car 1") && cb1.isChecked()) {
+                            prize = Integer.parseInt(go1.getText().toString()) + (int) (Integer.parseInt(go1.getText().toString()) * 0.85);
+                        } else if (winningCar.equals("Car 2") && cb2.isChecked()) {
+                            prize = Integer.parseInt(go2.getText().toString()) + (int) (Integer.parseInt(go2.getText().toString()) * 0.85);
+                        } else if (winningCar.equals("Car 3") && cb3.isChecked()) {
+                            prize = Integer.parseInt(go3.getText().toString()) + (int) (Integer.parseInt(go3.getText().toString()) * 0.85);
                         }
-                
+
                         // Hiển thị dialog chiến thắng
                         showWinDialog(winningCar, prize);
 
@@ -343,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
         if (cb1.isChecked()) {
             int n1 = Integer.parseInt(go1.getText().toString());
             if (seekBar1.getProgress() >= 100) {
-                currentBalance += (int) (n1 * 0.85);
+                currentBalance += n1 + (int) (n1 * 0.85); // Add the original bet amount
             } else {
                 currentBalance -= n1;
             }
@@ -351,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
         if (cb2.isChecked()) {
             int n2 = Integer.parseInt(go2.getText().toString());
             if (seekBar2.getProgress() >= 100) {
-                currentBalance += (int) (n2 * 0.85);
+                currentBalance += n2 + (int) (n2 * 0.85); // Add the original bet amount
             } else {
                 currentBalance -= n2;
             }
@@ -359,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
         if (cb3.isChecked()) {
             int n3 = Integer.parseInt(go3.getText().toString());
             if (seekBar3.getProgress() >= 100) {
-                currentBalance += (int) (n3 * 0.85);
+                currentBalance += n3 + (int) (n3 * 0.85); // Add the original bet amount
             } else {
                 currentBalance -= n3;
             }
@@ -408,7 +381,7 @@ public class MainActivity extends AppCompatActivity {
         go2.setText("0");
         go3.setText("0");
         btnReplay.setVisibility(View.INVISIBLE);
-        btnstart.setVisibility(View.       VISIBLE);
+        btnstart.setVisibility(View.VISIBLE);
 
         // Bắt đầu lại âm thanh động cơ
         if (engineSound != null && engineSound.isPlaying()) {
@@ -424,7 +397,7 @@ public class MainActivity extends AppCompatActivity {
         btnHowToPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,HowToPlayActivity.class);
+                Intent intent = new Intent(MainActivity.this, HowToPlayActivity.class);
                 startActivity(intent);
             }
         });
@@ -464,5 +437,3 @@ public class MainActivity extends AppCompatActivity {
         soundPool.release();
     }
 }
-
-
