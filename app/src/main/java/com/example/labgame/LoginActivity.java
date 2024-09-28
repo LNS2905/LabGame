@@ -31,7 +31,7 @@ public class LoginActivity extends Activity {
             if (validateCredentials(username.getText().toString(), password.getText().toString())) {
                 Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_LONG).show();
                 // Chuyển đến MainActivity sau khi đăng nhập thành công
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, RulesActivity.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_LONG).show();

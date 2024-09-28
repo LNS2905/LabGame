@@ -196,13 +196,14 @@ public class MainActivity extends AppCompatActivity {
         if (prize > 0) {
             tvWinMessage.setText("YOU WIN!");
             ivDialog.setImageResource(R.drawable.crown);
+            tvPrize.setText("+$" + prize);
         } else {
             tvWinMessage.setText("YOU LOSE!");
             ivDialog.setImageResource(R.drawable.sad_face);
+            tvPrize.setText("-$" + Math.abs(prize));
         }
     
         tvCarWin.setText(winningCar + " Wins!");
-        tvPrize.setText("+$" + prize);
     
         btnCollect.setOnClickListener(v -> dialog.dismiss());
     
@@ -215,6 +216,9 @@ public class MainActivity extends AppCompatActivity {
         seekBar3.setProgress(0);
         btnstart.setEnabled(false);
         btnReplay.setVisibility(View.INVISIBLE);
+
+        // Lưu trữ số dư ban đầu
+        int initialBalance = Integer.parseInt(balance.getText().toString().replace("$", ""));
 
         isRacing = true; // Bắt đầu cuộc đua
 
@@ -233,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         Random random = new Random();
         Timer timer = new Timer();
 
-        timer.scheduleAtFixedRate(new TimerTask() {
+        timer.schedule(new TimerTask() {
             public void run() {
                 int r1 = random.nextInt(3);
                 int r2 = random.nextInt(3);
@@ -259,21 +263,52 @@ public class MainActivity extends AppCompatActivity {
                             engineSound.release();
                             engineSound = null;
                         }
+                        // Tính toán số dư hiện tại
+                        int currentBalance = Integer.parseInt(balance.getText().toString().replace("$", ""));
 
-                        // Xác định xe chiến thắng và số tiền thưởng
-                        String winningCar = "";
+                         // Xác định xe chiến thắng
+                         String winningCar = "";
+                         if (seekBar1.getProgress() >= 100) {
+                             winningCar = "Car 1";
+                         } else if (seekBar2.getProgress() >= 100) {
+                             winningCar = "Car 2";
+                         } else if (seekBar3.getProgress() >= 100) {
+                             winningCar = "Car 3";
+                         }
+
+                        // Xác định thắng/thua dựa vào số dư
                         int prize = 0;
-                        if (seekBar1.getProgress() >= 100) {
-                            winningCar = "Car 1";
-                            prize = cb1.isChecked() ? (int) (Integer.parseInt(go1.getText().toString()) * 0.85) : 0;
-                        } else if (seekBar2.getProgress() >= 100) {
-                            winningCar = "Car 2";
-                            prize = cb2.isChecked() ? (int) (Integer.parseInt(go2.getText().toString()) * 0.85) : 0;
-                        } else if (seekBar3.getProgress() >= 100) {
-                            winningCar = "Car 3";
-                            prize = cb3.isChecked() ? (int) (Integer.parseInt(go3.getText().toString()) * 0.85) : 0;
+                        if (currentBalance > initialBalance) {
+                            // Người chơi thắng
+                            if (winningCar.equals("Car 1") && cb1.isChecked()) {
+                                prize = (int) (Integer.parseInt(go1.getText().toString()) * 0.85);
+                            } else if (winningCar.equals("Car 2") && cb2.isChecked()) {
+                                prize = (int) (Integer.parseInt(go2.getText().toString()) * 0.85);
+                            } else if (winningCar.equals("Car 3") && cb3.isChecked()) {
+                                prize = (int) (Integer.parseInt(go3.getText().toString()) * 0.85);
+                            }
+                        } else {
+                           // Người chơi thua - Tính tổng số tiền thua
+
+                            if (winningCar.equals("Car 1") && cb1.isChecked()) {
+                                prize = (int) (Integer.parseInt(go1.getText().toString()) * 0.85);
+                            } else if (winningCar.equals("Car 2") && cb2.isChecked()) {
+                                prize = (int) (Integer.parseInt(go2.getText().toString()) * 0.85);
+                            } else if (winningCar.equals("Car 3") && cb3.isChecked()) {
+                                prize = (int) (Integer.parseInt(go3.getText().toString()) * 0.85);
+                            }
+
+                           if (cb1.isChecked()) {
+                            prize -= Integer.parseInt(go1.getText().toString());
+                            }
+                            if (cb2.isChecked()) {
+                            prize -= Integer.parseInt(go2.getText().toString());
+                            }
+                            if (cb3.isChecked()) {
+                            prize -= Integer.parseInt(go3.getText().toString());
+                         }
                         }
-                        
+                
                         // Hiển thị dialog chiến thắng
                         showWinDialog(winningCar, prize);
 

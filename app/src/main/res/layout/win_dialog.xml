@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
-                    android:text="+$29,680"
+                    android:text="$29,680"
                     android:textColor="@color/racing_green"
                     android:textSize="20sp"
                     android:textStyle="bold" />
